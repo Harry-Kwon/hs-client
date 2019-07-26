@@ -1,21 +1,41 @@
 import React from 'react';
 import './App.css';
 
+const PAGE_SIZE=15;
+
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      cards: []
+      cards: [],
+      activeCards: [],
+      search: '',
+      page: 0,
     };
   }
 
-  handleChange = (event)=>{
-    console.log(event.target.value)
+  //@TODO pagination buttons
+  setPage = (p) => {
+    this.setState({...this.state,
+      activeCards: this.state.cards.slice(p*PAGE_SIZE, (p+1)*PAGE_SIZE),
+      page: p,
+    });
+  }
+
+  handleSearchChange = (event) => {
+    console.log(event.target.value);
+    this.setState({...this.state, search: event.target.value});
+    let s = event.target.value;
     fetch('https://api.harrykwon.dev/card?name=' + event.target.value)
     .then(res => res.json())
     .then(
       (result) => {
-        this.setState({...this.state, cards: result.cards});
+        console.log(s +'=?='+this.state.search);
+        if(s === this.state.search) {
+          this.setState({...this.state, cards: result.cards});
+          this.setPage(0);
+          console.log(this.state);
+        }
       },
       (error) =>  {
         console.log(error);
@@ -23,12 +43,16 @@ class App extends React.Component {
     )
   }
 
+
   render() {
     return (
       <div className='App'>
-        <Searchbox name='name' onChange={this.handleChange}/>
+        <Searchbox name='name' onChange={this.handleSearchChange}/>
+        <Pagination pages={Math.floor(this.state.cards.length/PAGE_SIZE)}
+      setPage={this.setPage}
+      currentPage={this.state.page}/>
 
-        <Cardlist cards={this.state.cards}/>
+        <Cardlist cards={this.state.activeCards}/>
       </div>
     );
   }
@@ -49,11 +73,29 @@ function Searchbox(props) {
   )
 }
 
+function Pagination(props) {
+  let pages = [];
+  let start = Math.max(0, props.currentPage-5);
+  let end = Math.min(props.pages, start+5*2);
+  console.log(start, end);
+
+  for(let i = start; i < end; i++) {
+    pages.push(<button onClick={() => props.setPage(i)}>{i+1}</button>)
+  }
+
+  return(
+    <div className='pagination'>
+      {pages}
+    </div>
+  )
+}
+
+
 function Cardlist(props) {
   const cardData = props.cards;
   console.log(cardData);
-
-  const cards = cardData.map((c) => {
+  
+  let cards = cardData.map((c) => {
     return(
       <Card
         key={c.id}
@@ -65,14 +107,15 @@ function Cardlist(props) {
 
   return (
     <div id='card-container'>
-      <ul>
+      <div id='card-list'>
         {cards}
-      </ul>
+      </div>
     </div>
   )
 }
 
 function Card(props) {
+
   return (
     <a href='/'>
       <img

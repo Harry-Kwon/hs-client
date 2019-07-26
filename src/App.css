@@ -31,29 +31,37 @@
     transform: rotate(360deg);
   }
 }
-
-ul {
-  list-style: none;
-  display: flex;
+/*
+#card-list{
+  display: inline-flex;
   flex-direction: row;
   flex-wrap: wrap;
 
-  margin: 40px auto 0 auto;
-  background-color: #FFF;
-  padding: 30px 0;
-  display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-around;
-  flex-wrap: wrap;
-}
 
+  background-color: #FFF;
+  padding: 30px 10px;
+  margin: 40px auto 0;
+}
+*/
+
+#card-list {
+  margin: 40px auto 0 auto;
+  padding: 30px auto;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(0px,240px));
+  grid-gap: 1rem;
+  justify-content: center;
+}
 a {
-  min-width: 180px;
-  max-width: 25%;
-  display: flex;
+/*  min-width: 180px;*/
+/*  max-width: 25%;*/
+  max-width: 240px;
 }
 
 img {
-  max-width:100%;
+  max-width:240px/*100%*/;
   height: auto;
 }
