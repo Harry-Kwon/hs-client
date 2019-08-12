@@ -1,5 +1,10 @@
 .App {
   text-align: center;
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  grid-gap: 1rem;
+
+  padding: 10px;
 }
 
 .App-logo {
@@ -64,4 +69,48 @@ a {
 img {
   max-width:240px/*100%*/;
   height: auto;
+}
+
+.Card-Viewer {
+  text-align: center;
+}
+
+.Deck-Builder {
+  padding: 3px;
+}
+
+.Deck-Builder textarea {
+  box-sizing: border-box;
+  margin: 50px auto 0;
+  width: 100%;
+  resize: none;
+}
+
+.Deck-Builder ul {
+  list-style-type: none;
+  text-align:left;
+
+  width: 100%;
+  padding: 0;
+}
+
+.Deck-Builder li {
+  text-align: left;
+  justify-content: center;
+
+  border: 1px solid black;
+  margin: 1px 0;
+  padding: 2px;
+}
+
+.Deck-Builder li * {
+  display: inline-block;
+}
+
+.Deck-Builder li p {
+  white-space: nowrap;
+}
+
+.Deck-Builder li .deck-card-count {
+  float: right;
 }

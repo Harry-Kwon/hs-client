@@ -7,6 +7,59 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      deck: [],
+    };
+  }
+
+  onCardClick = (card) => {
+    this.setState({...this.State, deck: [...this.state.deck, card]});
+  }
+
+  render() {
+    return(
+      <div className="App">
+        <CardViewer onclick={this.onCardClick}/>
+        <DeckBuilder deck={this.state.deck}/>
+      </div>
+    )
+
+  }
+}
+
+function DeckBuilder(props) {
+  let cardlist = {};
+  props.deck.forEach((c)=>{
+    if(cardlist[c.name]>0) {
+      cardlist[c.name]+=1;
+    } else {
+      cardlist[c.name]=1;
+    }
+  });
+
+  let decklistview=[];
+  for(let cardName in cardlist) {
+    decklistview.push(
+      <li>
+        <p className="deck-card-name">{cardName}</p>
+        <p className="deck-card-count">{cardlist[cardName]}</p>
+      </li>
+    )
+  }
+
+  return(
+    <div className="Deck-Builder">
+      <textarea rows="1" defaultValue="New Deck"></textarea>
+      <ul>
+        {decklistview}
+      </ul>
+    </div>
+  )
+}
+
+class CardViewer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       cards: [],
       activeCards: [],
       search: '',
@@ -46,13 +99,15 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className='App'>
+      <div className='Card-Viewer'>
         <Searchbox name='name' onChange={this.handleSearchChange}/>
         <Pagination pages={Math.floor(this.state.cards.length/PAGE_SIZE)}
       setPage={this.setPage}
       currentPage={this.state.page}/>
 
-        <Cardlist cards={this.state.activeCards}/>
+        <Cardlist cards={this.state.activeCards}
+          onclick={this.props.onclick}
+        />
       </div>
     );
   }
@@ -101,6 +156,7 @@ function Cardlist(props) {
         key={c.id}
         name={c.name}
         image={c.image}
+        onclick={()=>{props.onclick(c)}}
       />
     )
   });
@@ -117,13 +173,12 @@ function Cardlist(props) {
 function Card(props) {
 
   return (
-    <a href='/'>
-      <img
-        className='Card'
-        src={props.image}
-        alt={props.name}
-      />
-    </a>
+    <img
+      className='Card'
+      src={props.image}
+      alt={props.name}
+      onClick={props.onclick}
+    />
   )
 }
 
